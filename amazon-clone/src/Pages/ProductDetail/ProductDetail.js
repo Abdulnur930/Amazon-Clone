@@ -5,8 +5,6 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { productUrl } from "../../Api/endPoints";
 import ProductCard from "../../Component/Product/ProductCard";
-
-import classes from "./ProductDetail.module.css";
 import Loader from "../../Component/Loader/Loader";
 const ProductDetail = () => {
   const { productId } = useParams();

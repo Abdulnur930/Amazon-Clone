@@ -32,7 +32,7 @@ function Cart() {
           <h2>Hello</h2>
           <h3>Your shopping basket </h3>
           <hr />
-          {basket?.length == 0 ? (
+          {basket?.length === 0 ? (
             <p>Opps ! No item in your cart </p>
           ) : (
             basket?.map((item, i) => {

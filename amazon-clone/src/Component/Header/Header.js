@@ -6,9 +6,9 @@ import { BsSearch } from "react-icons/bs";
 import { BiCart } from "react-icons/bi";
 import LowerHeader from "./LowerHeader";
 import { DataContext } from "../DataProvider/DataProvider";
-
+import { auth } from "../../Utility/firebase";
 const Header = () => {
-  const [{ basket }, dispatch] = useContext(DataContext);
+  const [{ basket, user }, dispatch] = useContext(DataContext);
   const totalItem = basket?.reduce((amount, item) => {
     return item.amount + amount;
   }, 0);
@@ -41,7 +41,7 @@ amazon_PNG11.png"
               <option value="">All</option>
             </select>
             <input type="text" />
-            <BsSearch size={25} />
+            <BsSearch size={38} />
           </div>
 
           <div className={classes.order_container}>
@@ -54,9 +54,20 @@ amazon_PNG11.png"
                 <option value="">EN</option>
               </select>
             </Link>
-            <Link to="#">
-              <p>Sign In</p>
-              <span>Account & Lists</span>
+            <Link to={!user && "/auth"}>
+              <div>
+                {user ? (
+                  <>
+                    <p>Hello {user?.email?.split("@")[0]}</p>
+                    <span onClick={()=>auth.signOut()}>Sign Out</span>
+                  </>
+                ) : (
+                  <>
+                    <p> Hello,Sign In</p>
+                    <span>Account & Lists</span>
+                  </>
+                )}
+              </div>
             </Link>
             <Link to="/orders">
               <p>returns</p>
