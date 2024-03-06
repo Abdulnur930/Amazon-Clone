@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import classes from "./Auth.module.css";
-import { Link,useNavigate } from "react-router-dom";
+import { Link,useNavigate,useLocation } from "react-router-dom";
 import { auth } from "../../Utility/firebase";
 import {
   signInWithEmailAndPassword,
@@ -16,6 +16,7 @@ const Auth = () => {
   const [loading, setLoading] = useState({ signIn: false, signUP: false });
   const [{ user }, dispatch] = useContext(DataContext);
  const navigate= useNavigate()
+ const navStateData=useLocation()
   // console.log(user);
 
   const authHandler = async (e) => {
@@ -26,7 +27,7 @@ const Auth = () => {
         .then((userInfo) => {
           dispatch({ type: Type.SET_USER, user: userInfo.user });
           setLoading({ ...loading, signIn: false });
-          navigate("/");
+          navigate(navStateData?.state?.redirect ||"/");
         })
         .catch((err) => {
           setError(err.message);
@@ -38,7 +39,7 @@ const Auth = () => {
         .then((userInfo) => {
           dispatch({ type: Type.SET_USER, user: userInfo.user });
           setLoading({ ...loading, signUP: false });
-          navigate("/");
+          navigate(navStateData?.state?.redirect || "/");
         })
         .catch((err) => {
           setError(err.message);
@@ -49,7 +50,6 @@ const Auth = () => {
   return (
     <section className={classes.login}>
       <Link to="/">
-        
         <img
           src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1024px-Amazon_logo.svg.png"
           alt=""
@@ -57,6 +57,19 @@ const Auth = () => {
       </Link>
       <div className={classes.login__container}>
         <h1>Sign In</h1>
+        {navStateData?.state?.msg && (
+          <small
+            style={{
+              padding: "5px",
+              textAlign: "center",
+              color: "red",
+              fontWeight: "bold",
+            }}
+          >
+            {navStateData?.state?.msg}
+          </small>
+        )}
+
         <form>
           <div>
             <label htmlFor="email">Email</label>
