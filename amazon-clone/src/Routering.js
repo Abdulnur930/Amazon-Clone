@@ -24,7 +24,7 @@ const Routering = () => {
           path="/payments"
           element={
             <ProtectedRoute
-              msg={"you must log in to pay "}
+              msg={"you must log in to pay"}
               redirect={"/payments"}
             >
               <Elements stripe={stripePromise}>
@@ -33,8 +33,18 @@ const Routering = () => {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute
+              msg={"you must log in to access your orders"}
+              redirect={"/orders"}
+            >
+              <Orders />
+            </ProtectedRoute>
+          }
+        />
 
-        <Route path="/orders" element={<Orders />} />
         <Route path="/category/:categoryName" element={<Results />} />
         <Route path="/products/:productId" element={<ProductDetail />} />
         <Route path="/cart" element={<Cart />} />

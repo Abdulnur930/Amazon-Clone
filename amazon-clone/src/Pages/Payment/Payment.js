@@ -7,10 +7,13 @@ import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import CurrencyFormat from "../../Component/CurrencyFormat/CurrencyFormat";
 import { axiosInstance } from "../../Api/axios";
 import { ClipLoader } from "react-spinners";
-import { db } from "../.../Utility/firebase";
+import { db } from "../../Utility/firebase";
 import { useNavigate } from "react-router-dom";
+
+import { Type } from "../../Utility/action.type";
 const Payment = () => {
-  const [{ basket, user }] = useContext(DataContext);
+  const [{ user, basket }, dispatch] = useContext(DataContext);
+  console.log(user);
   const totalItem = basket?.reduce((amount, item) => {
     return item.amount + amount;
   }, 0);
@@ -35,12 +38,12 @@ const Payment = () => {
         method: "POST",
         url: `/payment/create?total=${total * 100}`,
       });
-      // console.log(response.data);
+      console.log(response.data);
       const clientSecret = response.data.clientSecret;
       const { paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
         payment_method: { card: elements.getElement(CardElement) },
       });
-
+      console.log(paymentIntent);
       await db
         .collection("users")
         .doc(user.uid)
@@ -51,6 +54,7 @@ const Payment = () => {
           amount: paymentIntent.amount,
           created: paymentIntent.created,
         });
+      dispatch({ type: Type.EMPTY_BASKET });
       setLoading(false);
       Navigate("/orders", { state: { msg: "you have placed new Order" } });
     } catch (error) {
